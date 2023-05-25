@@ -17,6 +17,6 @@
 
  */
 
-mod neuron;
-mod layer;
-mod network;
+pub mod neuron;
+pub mod layer;
+pub mod network;
