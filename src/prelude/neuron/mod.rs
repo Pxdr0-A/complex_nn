@@ -1,6 +1,7 @@
 use std::f64::consts::PI;
 use crate::math::Cf64;
 use crate::math::random;
+use crate::math::backpropagation;
 
 #[derive(Debug)]
 pub struct Neuron {
@@ -11,9 +12,9 @@ pub struct Neuron {
 
 #[derive(Debug)]
 pub enum ActivationFunction {
-    RELU,
     SIGMOID,
-    TANH
+    TANH,
+    RELU
 }
 
 impl Neuron {
@@ -43,6 +44,7 @@ impl Neuron {
         assert_eq!(self.weights.len(), input.len(),
                    "Input length must match the number of neuron inputs."
         );
+
         let mut output = Cf64::new(0.0, 0.0);
         for i in 0..input.len() {
             // consider parallelism
@@ -55,8 +57,6 @@ impl Neuron {
                           if input[i].is_sign_positive() { 0.0 } else { PI })
             ));
         }
-
-        println!("{:?}", output);
 
         // build a macro out of this section
         // hopefully to incorporate different approaches to decompose the complex output
