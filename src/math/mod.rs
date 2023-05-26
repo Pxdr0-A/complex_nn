@@ -7,6 +7,7 @@
 use std::f64::consts::PI;
 
 // general complex numbers
+// consider enum with precision
 #[derive(Debug, Clone)]
 pub struct Cf64 {
     pub q: f64,
@@ -16,7 +17,8 @@ pub struct Cf64 {
 impl Cf64 {
     pub fn new(q: f64, p: f64) -> Cf64 {
         // if number is negative it is converted into positive
-        Cf64 { q: q.abs(), p: p % PI }
+        // phase is between -pi and pi
+        Cf64 { q: q.abs(), p: p % (PI + 1e-5 ) }
     }
 
     pub fn add(z: &Cf64, w: &Cf64) -> Cf64 {
@@ -36,8 +38,11 @@ impl Cf64 {
         Cf64 { q, p }
     }
 
-    pub fn conj(&mut self) {
-        self.p = -self.p;
+    pub fn conj(&self) -> Cf64 {
+        let q = self.q;
+        let p = -self.p;
+
+        Cf64 { q, p }
     }
 }
 
@@ -49,20 +54,32 @@ mod complex_ops {
     }
 
     pub fn phase_f64(re: &f64, im: &f64) -> f64 {
-        (im.powf(2.0) / re.powf(2.0)).tan() % super::PI
+        if re.is_sign_positive() && im.is_sign_positive() {
+            // 1st quadrant (0 <-> pi/2)
+            (im / re).atan()
+        } else if re.is_sign_negative() && im.is_sign_positive() {
+            // 2nd quadrant (pi/2 <-> pi)
+            super::PI + (im / re).atan()
+        } else if re.is_sign_negative() && im.is_sign_negative() {
+            // 3rd quadrant (-pi <-> -pi/2)
+            (im / re).atan() - super::PI
+        } else {
+            // 4th quadrant (-pi/2 <-> 0)
+            (im / re).atan()
+        }
     }
 }
 
 pub mod random {
-    pub fn lcg(seed: u128) -> (u128, f64) {
+    pub fn lcg(seed: &mut u128) -> f64 {
         // IBM C/C++ convention params
         let a: u128 = 1103515245;
         let b: u128 = 12345;
         let m: u128 = 2u128.pow(31);
 
-        let rand_num = (a*seed + b) %  (m - 1);
-        let rand = (rand_num as f64)/(m as f64);
+        *seed = (a * *seed + b) % (m - 1);
+        let rand = (*seed as f64) / (m as f64);
 
-        (rand_num, rand)
+        rand
     }
 }
