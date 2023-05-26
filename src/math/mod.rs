@@ -4,6 +4,8 @@
 
  */
 
+pub mod backpropagation;
+
 use std::f64::consts::PI;
 
 // general complex numbers
@@ -18,7 +20,7 @@ impl Cf64 {
     pub fn new(q: f64, p: f64) -> Cf64 {
         // if number is negative it is converted into positive
         // phase is between -pi and pi
-        Cf64 { q: q.abs(), p: p % (PI + 1e-5 ) }
+        Cf64 { q: q.abs(), p: p % (PI + 1e-5) }
     }
 
     pub fn add(z: &Cf64, w: &Cf64) -> Cf64 {
@@ -45,7 +47,6 @@ impl Cf64 {
         Cf64 { q, p }
     }
 }
-
 
 mod complex_ops {
     // consider macro for general operations
