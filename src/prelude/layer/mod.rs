@@ -16,21 +16,22 @@ impl Layer {
         hidden: bool,
         activation: ActivationFunction,
         inputs: usize,
-        scale: &f64) -> Layer {
+        seed_increment: u128,
+        scale: &f64
+    ) -> Layer {
         // inputs on each neuron are considered in spite of input length
         // error handling is done prior to this
         let mut units: Vec<Neuron> = Vec::with_capacity(n_units);
         let mut neuron;
-        let seed_increment: u128 = 999;
         for u in 0..n_units {
             neuron = Neuron::new(
-                u,
+                u + 1,
                 inputs,
                 // we need to clone because every neuron has its own activation
                 activation.clone()
             );
             neuron.shuffle(
-                (u as u128) + seed_increment,
+                ((u as u128) + 1) * seed_increment,
                 scale
             );
 
@@ -38,5 +39,13 @@ impl Layer {
         }
 
         Layer { id, units, hidden }
+    }
+
+    pub fn next_id(&self) -> usize {
+        self.id + 1
+    }
+
+    pub fn get_units(&self) -> usize {
+        self.units.len()
     }
 }
