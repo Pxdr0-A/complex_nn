@@ -51,7 +51,7 @@ impl Cf64 {
 mod complex_ops {
     // consider macro for general operations
     pub fn norm_f64(re: &f64, im: &f64) -> f64 {
-        re.powf(2.0) + im.powf(2.0)
+        re.powi(2) + im.powi(2)
     }
 
     pub fn phase_f64(re: &f64, im: &f64) -> f64 {
