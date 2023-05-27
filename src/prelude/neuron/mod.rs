@@ -10,7 +10,7 @@ pub struct Neuron {
     activation: ActivationFunction
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum ActivationFunction {
     SIGMOID,
     TANH,
@@ -20,7 +20,8 @@ pub enum ActivationFunction {
 impl Neuron {
     pub fn new(id: usize, inputs: usize, activation: ActivationFunction) -> Neuron {
         let weights: Vec<Cf64> = vec![Cf64::new(0.0, 0.0); inputs];
-
+        // every neuron has its own activation for customization purposes
+        // must be the variable itself and not a reference to some variable
         Neuron { id, weights, activation }
     }
 
