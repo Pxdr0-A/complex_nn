@@ -24,7 +24,7 @@ pub trait Network {
         seed: u128
     );
 
-    // fit function will call backpropagation
+    // fit function will call backpropagation and receive dataset
 }
 
 impl Network for ConventionalNetwork {
