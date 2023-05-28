@@ -16,6 +16,13 @@ pub struct Cf64 {
     pub p: f64
 }
 
+#[derive(Debug, Clone)]
+pub struct Matrix<T> {
+    body: Vec<T>,
+    shape: [usize; 2],
+    capacity: [usize; 2]
+}
+
 impl Cf64 {
     pub fn new(q: f64, p: f64) -> Cf64 {
         // if number is negative it is converted into positive
@@ -47,6 +54,60 @@ impl Cf64 {
         Cf64 { q, p }
     }
 }
+
+impl<T> Matrix<T> {
+    pub fn new(capacity: [usize; 2]) -> Matrix<T> {
+        // allocates enough memory
+        let body = Vec::with_capacity(capacity[0] * capacity[1]);
+        let shape = [0, 0];
+
+        Matrix { body, shape, capacity }
+    }
+
+    pub fn elm(&self, i: &usize, j: &usize) -> &T {
+        // i - lines; j - columns
+        // check for search validity
+        let element = &self.body[i * self.shape[1] + j];
+
+        element
+
+    }
+
+    pub fn add_row(&mut self, row: &mut Vec<T>) {
+        // call inside an expression where mut Vec<f64> is declared
+        // add verification for capacity and insertion
+
+        self.shape[0] += 1;
+        self.shape[1] = row.len();
+        self.body.append(row);
+    }
+}
+
+/*
+pub struct TwoDimVec {
+    body: Vec<f64>,
+    shape: [usize; 2],
+    capacity: [usize; 2]
+}
+
+impl TwoDimVec {
+    pub fn new(capacity: [usize; 2]) -> TwoDimVec {
+        // allocates enough memory
+        let body = Vec::with_capacity(capacity[0]*capacity[1]);
+        let shape = [0, 0];
+        TwoDimVec { body, shape, capacity }
+    }
+
+    pub fn elm(&self, i: &usize, j: &usize) -> f64 {
+        // i - lines; j - columns
+        // check for search validity
+
+        let elm = self.body[i*self.shape[1] + j];
+
+        elm
+    }
+
+*/
 
 mod complex_ops {
     // consider macro for general operations
