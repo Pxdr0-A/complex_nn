@@ -27,7 +27,7 @@ pub struct Matrix<T> {
 
 impl Cf64 {
     pub fn new(q: f64, p: f64) -> Cf64 {
-        // if number is negative it is converted into positive
+        // if q is negative it is converted into positive
         // phase is between -pi and pi
         Cf64 { q: q.abs(), p: p % (PI + 1e-5) }
     }
