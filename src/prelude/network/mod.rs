@@ -1,4 +1,3 @@
-use crate::math::Cf64;
 use crate::prelude::layer::Layer;
 use crate::prelude::neuron::ActivationFunction;
 
