@@ -1,7 +1,6 @@
 use std::f64::consts::PI;
 use crate::math::Cf64;
 use crate::math::random;
-use crate::math::backpropagation;
 
 #[derive(Debug)]
 pub struct Neuron {
