@@ -6,9 +6,8 @@
 
 pub mod backpropagation;
 
-use std::collections::VecDeque;
 use std::f64::consts::PI;
-use std::panic::set_hook;
+
 
 // general complex numbers
 // consider enum with precision
