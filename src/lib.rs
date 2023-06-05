@@ -9,13 +9,16 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
-        println!("Started focus testing.");
+    fn synthetic_dataset() {
+        const DIM: usize = 2;
+        const SHAPE: [usize; 2] = [5000, DIM];
+        const CLASSES: usize = 50;
+        const SEED: u128 = 187;
 
         let dataset: TabularDataset<String, f64, f64>;
-        dataset = prelude::dataset::TabularDataset::sample([500, 2], 10, 11327);
+        dataset = prelude::dataset::TabularDataset::sample(SHAPE, CLASSES, SEED);
 
-        let (x, y, target) = utils::draw::arrange_points(&dataset, &[500, 2]);
+        let (x, y, target) = utils::draw::arrange_points(&dataset, &SHAPE);
         utils::draw::scatter_template(x, y, target);
     }
 }

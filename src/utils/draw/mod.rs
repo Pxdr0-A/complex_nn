@@ -1,17 +1,22 @@
+use std::{sync::Arc, f64::consts::PI, vec};
+
 use crate::prelude::dataset::TabularDataset;
 
 use plotters::prelude::*;
 
-const COLOR_STEPS: u8 = 50;
-
 pub fn scatter_template(x: Vec<f64>, y: Vec<f64>, target: Vec<f64>) {
     // should probabily check if x and y have the same len()
     let mut data: Vec<(f64, f64, f64)> = Vec::with_capacity(x.len());
+    let mut max_target: f64 = -f64::INFINITY;
     for i in 0..x.len() {
+        if target[i] > max_target {
+            max_target = target[i];
+        }
         data.push((x[i], y[i], target[i]));
     }
 
-    let root_area = BitMapBackend::new("./out/data.png", (800, 600))
+
+    let root_area = BitMapBackend::new("./out/data.png", (1200, 1000))
         .into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 
@@ -24,16 +29,19 @@ pub fn scatter_template(x: Vec<f64>, y: Vec<f64>, target: Vec<f64>) {
 
     ctx.configure_mesh().draw().unwrap();
     
-    let mut r_shade: u8 = 0;
-    let mut g_shade: u8 = 0;
+    let mut color: Vec<f64> = vec![0.0; 3];
     ctx.draw_series(data.iter().map(|point| {
-        if point.2 * (COLOR_STEPS as f64) >= 255.0 {
-            r_shade = 255;
-            g_shade = (point.2 * (COLOR_STEPS as f64) - 255.0) as u8;
-        } else {
-            r_shade = (point.2 as u8) * COLOR_STEPS;
-        }
-        Circle::new((point.0, point.1), 5, &RGBColor(r_shade, g_shade,255))
+        color[0] = 255.0 * ((2.0 * PI * point.2 / max_target) + 0.0).sin();
+        color[1] = 255.0 * ((2.0 * PI * point.2 / max_target) + PI/4.0).sin();
+        color[2] = 255.0 * ((2.0 * PI * point.2 / max_target) + PI/2.0).sin();
+        
+        Circle::new(
+            (point.0, point.1), 
+            4, 
+            &RGBColor(
+                color[0] as u8, 
+                color[1] as u8, 
+                color[2] as u8))
     }))
         .unwrap();
 }
