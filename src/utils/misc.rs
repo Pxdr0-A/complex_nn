@@ -1,3 +1,12 @@
+/* Miscellaneous functions
+
+    This script is does not worry about optimization!
+
+    Function here are used to aid the creation of the sample dataset:
+        Poor eficiency may be found from now on.    
+
+ */
+
 use std::collections::HashMap;
 use crate::{math::random::lcg, prelude::dataset::TabularDataset};
 
@@ -31,7 +40,7 @@ pub fn add_random_points(
     mut seed: u128
 ) {
     // rest of the rows (n_classes were already done)
-    let mut row: Vec<f64> = Vec::with_capacity(shape[1]);
+    let mut row: Vec<f64> = vec![1.0; shape[1]];
     let mut class_val: f64;
     let mut key: String;
     let mut center: &Vec<f64>;
@@ -56,7 +65,7 @@ pub fn add_random_points(
         index = 0;
         let mut scale: f64 = 0.0;
         let mut signal_val: f64 = 0.0;
-        row = vec![1.0; shape[1]].into_iter().map(|x| {
+        row = row.into_iter().map(|x| {
             // go through the coordinates
             index += 1;
             
