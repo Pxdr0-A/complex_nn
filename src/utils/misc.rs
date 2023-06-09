@@ -40,7 +40,7 @@ pub fn add_random_points(
     mut seed: u128
 ) {
     // rest of the rows (n_classes were already done)
-    let mut row: Vec<f64> = vec![1.0; shape[1]];
+    let mut row: Vec<f64>;
     let mut class_val: f64;
     let mut key: String;
     let mut center: &Vec<f64>;
@@ -65,7 +65,7 @@ pub fn add_random_points(
         index = 0;
         let mut scale: f64 = 0.0;
         let mut signal_val: f64 = 0.0;
-        row = row.into_iter().map(|x| {
+        row = vec![1.0; shape[1]].into_iter().map(|x| {
             // go through the coordinates
             index += 1;
             
@@ -77,7 +77,7 @@ pub fn add_random_points(
 
             x * center[index - 1] + signal_val * scale
         }).collect();
-
+        
         dataset.add_row(&mut row, class_val);
     }
 }
