@@ -10,15 +10,14 @@ mod tests {
 
     #[test]
     fn synthetic_dataset() {
-        const DIM: usize = 2;
+        const DIM: usize = 10;
         const SHAPE: [usize; 2] = [5000, DIM];
-        const CLASSES: usize = 50;
+        const CLASSES: usize = 20;
         const SEED: u128 = 187;
 
         let dataset: TabularDataset<String, f64, f64>;
         dataset = prelude::dataset::TabularDataset::sample(SHAPE, CLASSES, SEED);
 
-        let (x, y, target) = utils::draw::arrange_points(&dataset, &SHAPE);
-        utils::draw::scatter_template(x, y, target);
+        dataset.to_csv("./resources/dataset.csv");
     }
 }
