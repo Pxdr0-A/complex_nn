@@ -8,4 +8,3 @@
 
 pub mod file_ops;
 pub mod misc;
-pub mod draw;
