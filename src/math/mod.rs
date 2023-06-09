@@ -20,7 +20,7 @@ pub struct Cf64 {
 #[derive(Debug, Clone)]
 pub struct Matrix<T> {
     body: Vec<T>,
-    shape: [usize; 2],
+    pub shape: [usize; 2],
     capacity: [usize; 2]
 }
 
