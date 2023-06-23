@@ -20,4 +20,10 @@ mod tests {
 
         dataset.to_csv("./resources/dataset.csv");
     }
+
+    #[test]
+    fn load_dataset() {
+        let file = "./resources/dataset.csv";
+        let _dataset = TabularDataset::from_csv(file);
+    }
 }
