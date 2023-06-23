@@ -1,3 +1,12 @@
+/*
+
+ This module provides basic support for contructing a dataset.
+ It can then be used for upcoming neural network input.
+
+ In here I was not extra thoughtfull on efficiency and memory safety.
+
+ */
+
 use std::collections::HashMap;
 
 use crate::math::Matrix;
@@ -8,8 +17,6 @@ pub struct TabularDataset<H, B, T> {
     header: Vec<H>,
     body: Matrix<B>,
     target: Vec<T>,
-    file: Option<String>,
-    batch: usize
 }
 
 /* Future datasets to consider:
@@ -29,15 +36,11 @@ impl<H, B, T> TabularDataset<H, B, T> {
         let header: Vec<H> = Vec::with_capacity(capacity[1]);
         let body: Matrix<B> = Matrix::new(capacity);
         let target: Vec<T> = Vec::with_capacity(capacity[0]);
-        let file = None;
-        let batch: usize = 0;
 
         TabularDataset {
             header,
             body,
-            target,
-            file,
-            batch
+            target
         }
     }
 
@@ -51,13 +54,11 @@ impl<H, B, T> TabularDataset<H, B, T> {
 
         (self.body.row(i), &self.target[*i])
     }
-
-    pub fn from_csv(file: &str, batch_size: usize)  {
-
-    }
 }
 
 // specific implementation for a synthetic clustering dataset
+// this is going to be the most common configuration
+// and maybe is it going to be the accepted configuration
 // head - string
 // body - f64
 // target - f64
@@ -119,5 +120,54 @@ impl TabularDataset<String, f64, f64> {
         crate::utils::file_ops::write_csv(path, contents)
             .expect("Failed to export TabularDataset to csv format.");
 
+    }
+
+    pub fn from_csv(file: &str) -> TabularDataset<String, f64, f64>{
+        
+        let content = crate::utils::file_ops::read_csv(file).expect(
+            "Failed to read existing csv file."
+        );
+
+        let mut rows_split = content.split("\n");
+        let mut current_row;
+
+        // H = String
+        let header: Vec<String> = rows_split
+            .next()
+            .unwrap()
+            .split(",")
+            .map(|x| x.to_string())
+            .collect();
+
+        let n_rows = rows_split.clone().count();
+        let mut body: Matrix<f64> = Matrix::new([n_rows, header.len() - 1]);
+        let mut target: Vec<f64> = Vec::with_capacity(n_rows - 1);
+        // parse them to f64
+        for _ in 0..n_rows-1  {
+            current_row = rows_split.next();
+            
+            target.push(
+                current_row
+                    .unwrap()
+                    .split(",")
+                    .map(|x| x.parse::<f64>().expect("Invalid datatype in dataset."))
+                    .last()
+                    .unwrap()
+            );
+            body.add_row(
+                &mut current_row
+                    .unwrap()
+                    .split(",")
+                    .map(|x| x.parse::<f64>().expect("Invalid datatype in dataset."))
+                    .take(header.len() - 1)
+                    .collect()
+            );
+        }
+
+        TabularDataset {
+            header,
+            body,
+            target
+        }
     }
 }
