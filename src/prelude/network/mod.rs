@@ -1,34 +1,16 @@
 use crate::prelude::layer::Layer;
 use crate::prelude::neuron::ActivationFunction;
 
-// considering fully connected network
 #[derive(Debug)]
 pub struct ConventionalNetwork {
     layers: Vec<Layer>,
     scale: f64
 }
-pub trait Network {
-    fn new(
-        n_units: usize,
-        activation: ActivationFunction,
-        input_length: usize,
-        seed: u128,
-        scale: &f64
-    ) -> Self;
 
-    fn add(
-        &mut self,
-        n_units: usize,
-        activation: ActivationFunction,
-        seed: u128
-    );
-
-    // fit function will call backpropagation and receive dataset
-}
-
-impl Network for ConventionalNetwork {
+// considering fully connected network
+impl ConventionalNetwork {
     // just the input layer
-    fn new(
+    pub fn new(
         n_units: usize,
         activation: ActivationFunction,
         input_length: usize,
@@ -59,7 +41,7 @@ impl Network for ConventionalNetwork {
         ConventionalNetwork { layers, scale: *scale }
     }
 
-    fn add(
+    pub fn add(
         &mut self,
         n_units: usize,
         activation: ActivationFunction,
@@ -80,4 +62,13 @@ impl Network for ConventionalNetwork {
             )
         );
     }
+
+    pub fn close(&mut self) {
+        let last_layer = self.layers
+            .last_mut()
+            .expect("Network must be initialized first.");
+
+        last_layer.switch_hidden()
+    }
+    
 }
