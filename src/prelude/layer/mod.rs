@@ -27,7 +27,7 @@ impl Layer {
             neuron = Neuron::new(
                 u + 1,
                 inputs,
-                // we need to clone because every neuron has its own activation
+                // every neuron has its own activation
                 activation.clone()
             );
             neuron.shuffle(
