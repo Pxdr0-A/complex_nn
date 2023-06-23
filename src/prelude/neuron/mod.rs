@@ -61,7 +61,11 @@ impl Neuron {
         // build a macro out of this section
         // hopefully to incorporate different approaches to decompose the complex output
         self.activation.activate(&output)
+    }
 
+    pub fn get_id(&self) -> &usize {
+
+        &self.id
     }
 }
 

@@ -42,10 +42,17 @@ impl Layer {
     }
 
     pub fn next_id(&self) -> usize {
+
         self.id + 1
     }
 
     pub fn get_units(&self) -> usize {
+
         self.units.len()
+    }
+
+    pub fn switch_hidden(&mut self) {
+        
+        self.hidden = if self.hidden {false} else {true}
     }
 }
