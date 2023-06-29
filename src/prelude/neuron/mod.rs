@@ -4,9 +4,9 @@ use crate::math::random;
 
 #[derive(Debug)]
 pub struct Neuron {
-    id: usize,
-    weights: Vec<Cf64>,
-    activation: ActivationFunction
+    pub id: usize,
+    pub weights: Vec<Cf64>,
+    pub activation: ActivationFunction
 }
 
 #[derive(Debug, Clone)]
@@ -70,6 +70,7 @@ impl Neuron {
 }
 
 impl ActivationFunction {
+    // considering the real part after the summation
     fn activate(&self, output: &Cf64) -> f64 {
         match self {
             ActivationFunction::SIGMOID => {
