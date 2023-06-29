@@ -50,8 +50,26 @@ mod tests {
             ActivationFunction::RELU, 
             347
         );
+    }
 
-        network.close();
+    #[test]
+    fn feed_foward() {
+        let mut network = ConventionalNetwork::new(
+            4, 
+            ActivationFunction::SIGMOID, 
+            8, 
+            2134, 
+            &1.0
+        );
 
+        network.add(
+            2, 
+            ActivationFunction::SIGMOID, 
+            347
+        );
+
+        let input: &[f64] = &vec![1.0; 8];
+        let output = network.foward(input);
+        println!("{:?}", output);
     }
 }
