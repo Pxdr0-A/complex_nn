@@ -3,8 +3,8 @@ use crate::prelude::neuron::Neuron;
 
 #[derive(Debug)]
 pub struct Layer {
-    id: usize,
-    units: Vec<Neuron>,
+    pub id: usize,
+    pub units: Vec<Neuron>,
     hidden: bool
 }
 
@@ -19,6 +19,7 @@ impl Layer {
         seed_increment: u128,
         scale: &f64
     ) -> Layer {
+
         // inputs on each neuron are considered in spite of input length
         // error handling is done prior to this
         let mut units: Vec<Neuron> = Vec::with_capacity(n_units);
@@ -41,6 +42,34 @@ impl Layer {
         Layer { id, units, hidden }
     }
 
+    pub fn signal(&self, input: &[f64]) -> Vec<f64> {
+
+        // error handling will be at a higher level (in the Network)
+        let mut output: Vec<f64> = Vec::with_capacity(self.units.len());
+        
+        if self.hidden {
+            // hidden layer logic
+            for neuron in &self.units[..] {
+                output.push(neuron.signal(&input[..]));
+            }
+        } else {
+            // input layer logic
+            let mut init: usize = 0;
+            let mut end: usize;
+            for neuron in &self.units[..] {
+                end = init + neuron.weights.len();
+                
+                output.push(neuron.signal(
+                    &input[init..end]
+                ));
+
+                init = end;
+            }        
+        }
+
+        output
+    }
+
     pub fn next_id(&self) -> usize {
 
         self.id + 1
@@ -49,10 +78,5 @@ impl Layer {
     pub fn get_units(&self) -> usize {
 
         self.units.len()
-    }
-
-    pub fn switch_hidden(&mut self) {
-        
-        self.hidden = if self.hidden {false} else {true}
     }
 }

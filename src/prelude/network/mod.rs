@@ -1,9 +1,11 @@
+mod error_handling;
+
 use crate::prelude::layer::Layer;
 use crate::prelude::neuron::ActivationFunction;
 
 #[derive(Debug)]
 pub struct ConventionalNetwork {
-    layers: Vec<Layer>,
+    pub layers: Vec<Layer>,
     scale: f64
 }
 
@@ -24,15 +26,8 @@ impl ConventionalNetwork {
                 n_units,
                 false,
                 activation,
-                if (input_length / n_units) * n_units == input_length {
-                    if input_length / n_units >= 2 {
-                        input_length / n_units
-                    } else {
-                        panic!("Single input Neurons will bypass complex properties.");
-                    }
-                } else {
-                    panic!("The number of units must be a multiple of the input length.");
-                },
+                error_handling::input_test(input_length, n_units)
+                    .expect("Input must be a multiple different from 1 of the number o units."),
                 seed,
                 &scale
             )
@@ -47,6 +42,7 @@ impl ConventionalNetwork {
         activation: ActivationFunction,
         seed: u128
     ) {
+        
         let last_layer = self.layers
             .last()
             .expect("Network must be initialized first.");
@@ -63,12 +59,19 @@ impl ConventionalNetwork {
         );
     }
 
-    pub fn close(&mut self) {
-        let last_layer = self.layers
-            .last_mut()
-            .expect("Network must be initialized first.");
+    pub fn foward(&self, input: &[f64]) -> Vec<f64> {
+        let input_layer = &self.layers[0];
+        // build a macro with this
+        let _neuron_input_len = error_handling::input_test(
+            input.len(), input_layer.units.len()
+        ).expect("Input must be a multiple different from 1 of the number o units.");
 
-        last_layer.switch_hidden()
+        let mut output: Vec<f64> = Vec::from(input);
+        for layer in &self.layers[..] {
+            output = layer.signal(&output);
+        }
+
+        output
     }
     
 }
